@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>primedots</title>
+        <meta charset="UTF-8">
+        <style>
+            body {
+                line-height: 0px;
+            }
+            span {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                background-color: lightblue;
+                margin: 3px;
+            }
+            span.prime {
+                background-color: red;
+            }
+            span:hover {
+                border: 1px blue solid;
+                margin: 2px;
+            }
+            span.primal {
+                border: 3px yellow solid;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+            (function(){
+                function isInteresting(n) {
+                    for (var i = 0; i < window.divisors.length; i++) {
+                        if (window.divisors.includes(n)) return false;
+                        var prime = window.divisors[i];
+                        if (n % prime == 0) return false;
+                        if (prime*prime > n) return true;
+                    }
+                    return true;
+                }
+
+                function isPrime(n) {
+                    for (var i = 2; i*i <= n; i++) {
+                        if (n % i == 0) return false;
+                    }
+                    return n != 1;
+                }
+
+                function updateWith() {
+                    document.body.style.width = 'calc(16px * ' + window.width + ')';
+                    updateTitle();
+                }
+
+                function decreaseWidth() {
+                    window.width--;
+                    updateWith();
+                }
+
+                function increaseWidth() {
+                    window.width++;
+                    updateWith();
+                }
+
+                function reClassifyNumbers() {
+                    var spans = document.getElementsByTagName('span');
+
+                    for (var i = 0; i < spans.length; i++) {
+                        var span = spans[i];
+                        if (isInteresting(parseInt(span.id))) span.classList.add('prime');
+                        else span.classList.remove('prime');
+                    }
+                }
+
+                function updatePrimeCount() {
+                    window.divisors = window.primes.slice(0, window.numberOfDivisors);
+                    reClassifyNumbers();
+                    updateTitle();
+                    if (window.showPrimals) markPrimals();
+                }
+
+                function addPrime() {
+                    window.numberOfDivisors++;
+                    updatePrimeCount();
+                }
+
+                function removePrime() {
+                    window.numberOfDivisors--;
+                    updatePrimeCount();
+                }
+
+                function updateTitle() {
+                    document.title = 'primedots - ' + window.width + ' ' + JSON.stringify(window.divisors.slice(-1))
+                }
+
+                function markPrimals() {
+                    var spans = document.getElementsByTagName('span');
+                    var i = 0;
+                    for (; i < spans.length; i++) {
+                        var span = spans[i];
+                        if (span.id < Math.pow(window.primes[window.numberOfDivisors+1], 2)) {
+                            span.classList.add('primal');
+                        } else {
+                            break;
+                        }
+                    }
+                    while (i < spans.length) spans[i++].classList.remove('primal');
+                }
+
+                function unmarkPrimals() {
+                    document.querySelectorAll('span').forEach(function(span) {
+                        span.classList.remove('primal');
+                    });
+                }
+
+                window.main = function () {
+                    window.totalCount = 5000;
+
+                    for (var i = 1; i < window.totalCount; i++) {
+                        var span = document.createElement('span');
+                        span.id = i;
+                        span.addEventListener('click', function () { alert(this.id); });
+                        document.body.appendChild(span);
+                    }
+
+                    window.primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997];
+                    window.numberOfDivisors = 4;
+                    window.width = 71;
+                    window.showPrimals = true;
+                    updatePrimeCount();
+                    updateWith();
+                    const UP = 38;
+                    const DOWN = 40;
+                    const RIGHT = 39;
+                    const LEFT = 37;
+
+                    document.addEventListener('keydown', function(event) {
+                        if (event.keyCode == RIGHT) {
+                            increaseWidth();
+                            event.preventDefault();
+                        } else if (event.keyCode == LEFT) {
+                            decreaseWidth();
+                            event.preventDefault();
+                        } else if (event.keyCode == DOWN) {
+                            removePrime();
+                            event.preventDefault();
+                        } else if (event.keyCode == UP) {
+                            addPrime();
+                            event.preventDefault();
+                        } else if (event.keyCode == 'P'.charCodeAt(0)) {
+                            if (window.showPrimals) {
+                                unmarkPrimals();
+                            } else {
+                                markPrimals();
+                            }
+                            window.showPrimals = !window.showPrimals;
+                        }
+                    });
+                }
+            })();
+
+            main();
+        </script>
+    </body>
+</html>
