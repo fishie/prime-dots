@@ -96,9 +96,10 @@
                 function markPrimals() {
                     var spans = document.getElementsByTagName('span');
                     var i = 0;
+                    var nextPrime = window.primes[window.numberOfDivisors];
                     for (; i < spans.length; i++) {
                         var span = spans[i];
-                        if (span.id < Math.pow(window.primes[window.numberOfDivisors+1], 2)) {
+                        if (span.id < nextPrime*nextPrime) {
                             span.classList.add('primal');
                         } else {
                             break;
