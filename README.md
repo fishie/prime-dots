@@ -1,3 +1,3 @@
 # prime-dots
 
-https://fishie.github.io/prime-dots/primedots.html
+[primedots](https://fishie.github.io/prime-dots/primedots.html?limit=20000)
