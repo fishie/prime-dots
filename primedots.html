@@ -115,7 +115,8 @@
                 }
 
                 window.main = function () {
-                    window.totalCount = 5000;
+                    const urlParams = new URLSearchParams(window.location.search);
+                    window.totalCount = urlParams.has('limit') ? parseInt(urlParams.get('limit')) : 5000;
 
                     for (var i = 1; i < window.totalCount; i++) {
                         var span = document.createElement('span');
